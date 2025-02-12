@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { signIn } from "next-auth/react"
+import Image from "next/image"
 
 export function LoginForm({ className, ...props }: React.ComponentProps<"div">) {
   return (
@@ -96,10 +97,11 @@ export function LoginForm({ className, ...props }: React.ComponentProps<"div">) 
             </div>
           </form>
           <div className="relative hidden bg-muted md:block">
-            <img
-              src="/placeholder.svg"
+            <Image
+              src="/placeholder.png"
               alt="Image"
-              className="absolute inset-0 h-full w-full object-cover dark:brightness-[0.2] dark:grayscale"
+              layout="fill"
+              objectFit='cover'
             />
           </div>
         </CardContent>
