@@ -6,6 +6,7 @@ import LinkedIn from "next-auth/providers/linkedin"
 import Facebook from 'next-auth/providers/facebook';
 import Twitter from 'next-auth/providers/twitter';
 import Apple from 'next-auth/providers/apple';
+import { getUser } from '@/lib/db';
 
 export const {
   handlers: { GET, POST },
@@ -25,14 +26,15 @@ export const {
         if (!credentials?.email || !credentials?.password) {
           throw new Error("Missing email or password");
         }
-        const user = { id: 1, name: 'J Smith', email: 'test@test.com', password: '1password' };
-        console.log(credentials);
-
+        const email = credentials.email as string;
+        const user = await getUser(email);
         if (!user) {
           throw new Error("No user found with this email");
         }
 
-        if (!(user.password === credentials.password)) {
+        const password = credentials.password as string;
+
+        if (!(user.password === password)) {
           throw new Error("Password does not match");
         }
         
