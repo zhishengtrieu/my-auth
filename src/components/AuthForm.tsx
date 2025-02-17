@@ -24,7 +24,25 @@ export function AuthForm({ mode }: AuthFormProps) {
       });
     } else {
       // Logique d'inscription
-      console.log("Inscription :", { name, email, password });
+      fetch("/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ name, email, password }),
+      }).then((res) => {
+        if (res.ok) {
+          signIn("credentials", {
+            email: email,
+            password: password,
+            redirectTo: "/dashboard",
+          });
+        } else {
+          res.json().then((data) => {
+            console.error(data.error);
+          });
+        }
+      });
     }
   }
 
