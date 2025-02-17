@@ -4,27 +4,23 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { signIn } from "next-auth/react"
-import Image from "next/image"
 
 interface AuthFormProps {
   mode: 'login' | 'register';
 }
 
 export function AuthForm({ mode }: AuthFormProps) {
-
-  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const formData = new FormData(event.currentTarget);
+  const handleSubmit = async (formData: FormData) => {
     const email = formData.get('email') as string;
     const password = formData.get('password') as string;
     const name = formData.get('name') as string;
 
-    if (mode === "login") {
+    if (mode === 'login') {
       // Logique de connexion
       await signIn("credentials", {
         email: email,
         password: password,
-        callbackUrl: "/dashboard",
+        redirectTo: "/dashboard",
       });
     } else {
       // Logique d'inscription
@@ -36,7 +32,7 @@ export function AuthForm({ mode }: AuthFormProps) {
     <div className="flex flex-col gap-6">
       <Card className="overflow-hidden">
         <CardContent className="grid p-0 md:grid-cols-2">
-          <form className="p-6 md:p-8" onSubmit={handleSubmit}>
+          <form className="p-6 md:p-8" action={handleSubmit}>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col items-center text-center">
                 <h1 className="text-2xl font-bold">
@@ -49,12 +45,12 @@ export function AuthForm({ mode }: AuthFormProps) {
               {mode === "register" && (
                 <div className="grid gap-2">
                   <Label htmlFor="name">Name</Label>
-                  <Input id="name" type="text" placeholder="Your Name" required />
+                  <Input id="name" type="text" name="name" placeholder="Your Name" required />
                 </div>
               )}
               <div className="grid gap-2">
                 <Label htmlFor="email">Email</Label>
-                <Input id="email" type="email" placeholder="m@example.com" required />
+                <Input id="email" type="email" name="email" placeholder="m@example.com" required />
               </div>
               <div className="grid gap-2">
                 <div className="flex items-center">
@@ -65,7 +61,7 @@ export function AuthForm({ mode }: AuthFormProps) {
                     </a>
                   )}
                 </div>
-                <Input id="password" type="password" required />
+                <Input id="password" name="password" type="password" required />
               </div>
               <Button type="submit" className="w-full">
                 {mode === "login" ? "Login" : "Sign up"}
@@ -179,11 +175,10 @@ export function AuthForm({ mode }: AuthFormProps) {
             </div>
           </form>
           <div className="relative hidden bg-muted md:block">
-            <Image
+            <img
               src="/placeholder.png"
               alt="Image"
-              layout="fill"
-              objectFit='cover'
+              className="object-cover w-full h-full"
             />
           </div>
         </CardContent>
