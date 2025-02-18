@@ -16,8 +16,6 @@ export async function createUser(name: string, email: string, password: string) 
   // let salt = genSaltSync(10);
   // let hash = hashSync(password, salt);
 
-  // TODO: ensure email is unique
-
   const newUser = await prisma.user.create({
       data: {
         email: email,
