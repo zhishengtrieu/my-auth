@@ -7,6 +7,7 @@ import Facebook from 'next-auth/providers/facebook';
 import Twitter from 'next-auth/providers/twitter';
 import Apple from 'next-auth/providers/apple';
 import { getUser } from '@/lib/db';
+import { compare } from 'bcrypt-ts';
 
 export const {
   handlers: { GET, POST },
@@ -33,8 +34,8 @@ export const {
         }
 
         const password = credentials.password as string;
-
-        if (!(user.password === password)) {
+        let passwordsMatch = await compare(password, user.password!);
+        if (!passwordsMatch) {
           throw new Error("Password does not match");
         }
         

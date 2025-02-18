@@ -8,7 +8,7 @@ export default function Home() {
       <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
         
         <h1 className="text-3xl font-bold text-center">
-          {session ? `Welcome ${session.user?.email} !` : "Welcome to Next.js !"}
+          {session ? `Welcome ${session.user?.name} !` : "Welcome to my Next.js auth app !"}
         </h1>
 
         <p>
