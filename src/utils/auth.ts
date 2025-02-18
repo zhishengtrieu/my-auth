@@ -34,7 +34,7 @@ export const {
         }
 
         const password = credentials.password as string;
-        let passwordsMatch = await compare(password, user.password!);
+        const passwordsMatch = await compare(password, user.password!);
         if (!passwordsMatch) {
           throw new Error("Password does not match");
         }
