@@ -8,6 +8,7 @@ import Twitter from 'next-auth/providers/twitter';
 import Apple from 'next-auth/providers/apple';
 import { getUser } from '@/lib/db';
 import { compare } from 'bcrypt-ts';
+import jwt from "jsonwebtoken";
 
 export const {
   handlers: { GET, POST },
@@ -16,7 +17,6 @@ export const {
   signOut,
 } = NextAuth({
   providers: [
-    // Fournisseur de connexion par email et mot de passe
     Credentials({
       name: 'Credentials',
       credentials: {
@@ -46,22 +46,18 @@ export const {
         };
       },
     }),
-    // Fournisseur Google
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-    // Fournisseur GitHub
     GitHubProvider({
       clientId: process.env.GITHUB_CLIENT_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
     }),
-    // Fournisseur LinkedIn
     LinkedIn({
       clientId: process.env.LINKEDIN_CLIENT_ID!,
       clientSecret: process.env.LINKEDIN_CLIENT_SECRET!,
     }),
-    // Fournisseur Facebook
     Facebook({
       clientId: process.env.AUTH_FACEBOOK_ID!,
       clientSecret: process.env.GITHUB_CLIENT_SECRET!,
@@ -72,4 +68,35 @@ export const {
     }),
     Apple,
   ],
+  session: {
+    strategy: "jwt",
+  },
+  callbacks: {
+    async jwt({ token, user }) {
+      if (user) {
+        const accessToken = jwt.sign(
+          { sub: user.id, email: user.email },
+          process.env.AUTH_SECRET!,
+          { expiresIn: "1h" }
+        );
+
+        token.accessToken = accessToken;
+        token.accessTokenExpires = Date.now() + 3600 * 1000;
+        token.userId = user.id;
+      }
+
+      if (Date.now() > (token.accessTokenExpires as number ?? 0)) {
+        return {};
+      }
+
+      return token;
+    },
+    async session({ session, token }) {
+      session.user.id = token.userId as string;
+      session.accessToken = token.accessToken as string;
+      session.accessTokenExpires = token.accessTokenExpires as number;
+      return session;
+    },
+  },
+  secret: process.env.AUTH_SECRET!,
 });
