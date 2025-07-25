@@ -86,7 +86,7 @@ export const {
       }
 
       if (Date.now() > (token.accessTokenExpires as number ?? 0)) {
-        return {};
+        return null;
       }
 
       return token;
