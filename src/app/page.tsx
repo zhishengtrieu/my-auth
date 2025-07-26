@@ -14,6 +14,9 @@ export default function Home() {
         <p>
           Go to your <strong><a href="/dashboard">dashboard</a></strong>
         </p>
+        <p>
+          Or go to your <strong><a href="/account">account</a></strong>
+        </p>
         
       </main>
       <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">

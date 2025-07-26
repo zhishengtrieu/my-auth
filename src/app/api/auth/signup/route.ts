@@ -12,7 +12,12 @@ export async function POST(request: Request) {
 	if (user) {
 		return NextResponse.json({ error: 'User already exists' }, { status: 400 });
 	}
-	await createUser(name, email, password);
+	await createUser(
+		{
+			name: name,
+			email: email,
+			password: password
+		});
 	return NextResponse.json({ message: 'User created' });
 }
     

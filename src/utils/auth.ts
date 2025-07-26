@@ -6,7 +6,7 @@ import LinkedIn from "next-auth/providers/linkedin"
 import Facebook from 'next-auth/providers/facebook';
 import Twitter from 'next-auth/providers/twitter';
 import Apple from 'next-auth/providers/apple';
-import { getUser } from '@/lib/db';
+import { getUser, createOrGetOAuthUser } from '@/lib/db';
 import { compare } from 'bcrypt-ts';
 import jwt from "jsonwebtoken";
 
@@ -72,6 +72,19 @@ export const {
     strategy: "jwt",
   },
   callbacks: {
+    async signIn({ user, account, profile }) {
+      if (account && account.provider !== "credentials") {
+        const dbUser = await createOrGetOAuthUser({
+          email: user.email!,
+          name: user.name ?? profile?.name ?? '',
+          image: (user.image  ?? profile?.avatar_url ?? '') as string,
+          provider: account.provider,
+          providerAccountId: account.providerAccountId,
+        });
+      }
+
+      return true;
+    },
     async jwt({ token, user }) {
       if (user) {
         const accessToken = jwt.sign(

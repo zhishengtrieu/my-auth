@@ -26,9 +26,9 @@ export default function Account() {
           ) : (
             <>
               <h1 className="text-3xl font-bold text-center">Login to access your account</h1>
-              <p className="text-center">
+              <Button>
                 <a href="/login">Login</a>
-              </p>
+              </Button>
             </>
           )}
         </>

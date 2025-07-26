@@ -1,12 +1,22 @@
 import { auth } from "@/utils/auth"
 import { NextResponse, NextRequest } from "next/server"
 
+const AUTH_PAGES = ['/login', '/register']
+const protectedRoutes = ["/dashboard", "/account"]
+
 export async function middleware(request: NextRequest) {
+  const url = request.nextUrl.clone()
+  const { pathname } = request.nextUrl
   const session = await auth()
-  const isAuthPage = request.nextUrl.pathname.startsWith("/login") || request.nextUrl.pathname.startsWith("/register")
+  const isAuthPage = AUTH_PAGES.includes(pathname)
   if (session && isAuthPage) {
-    const url = request.nextUrl.clone()
     url.pathname = "/dashboard"
     return NextResponse.redirect(url)
   }
+
+  if (!session && protectedRoutes.includes(pathname)) {
+    url.pathname = "/login"
+    return NextResponse.redirect(url)
+  }
+  return NextResponse.next()
 }
