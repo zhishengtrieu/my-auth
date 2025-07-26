@@ -4,6 +4,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { signIn } from "next-auth/react"
+import Image from "next/image"
 
 interface AuthFormProps {
   mode: 'login' | 'register';
@@ -193,10 +194,11 @@ export function AuthForm({ mode }: AuthFormProps) {
             </div>
           </form>
           <div className="relative hidden bg-muted md:block">
-            <img
+            <Image
               src="/placeholder.png"
               alt="Image"
               className="object-cover w-full h-full"
+              fill
             />
           </div>
         </CardContent>

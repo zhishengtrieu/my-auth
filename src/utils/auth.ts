@@ -74,7 +74,7 @@ export const {
   callbacks: {
     async signIn({ user, account, profile }) {
       if (account && account.provider !== "credentials") {
-        const dbUser = await createOrGetOAuthUser({
+        await createOrGetOAuthUser({
           email: user.email!,
           name: user.name ?? profile?.name ?? '',
           image: (user.image  ?? profile?.avatar_url ?? '') as string,
